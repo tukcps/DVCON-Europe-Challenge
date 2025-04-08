@@ -1,4 +1,4 @@
-/*
+/**
  * main.cpp
  *
  *  Created on: 10.07.2024
@@ -8,6 +8,9 @@
 
 #include <systemc>
 
+/**
+ * Testbench Module
+ */
 SC_MODULE(TestbenchModule) {
     sc_core::sc_port<sc_core::sc_signal_in_if<int>> status_input;
     double powerEstimation = 0.0;
@@ -26,19 +29,22 @@ SC_MODULE(TestbenchModule) {
 
             switch(status) {
                 case 0: //Boot Status
-
+                    std::cout << "Booting" << std::endl;
+                    powerEstimation += 1.6;
                     break;
                 case 1: //Not Available
-
+                    std::cout << "Employee not available" << std::endl;
+                    powerEstimation += 1.35;
                     break;
                 case 2: //Available
-
+                    std::cout << "Employee available" << std::endl;
                     break;
                 case 3: //At University
-
+                    std::cout << "Employee somewhere" << std::endl;
                     break;
                 case 4: //Bluetooth
-
+                    std::cout << "Bluetooth package received and sent" << std::endl;
+                    energyEstimation += 2.1;
                     break;
             }
 
@@ -47,6 +53,9 @@ SC_MODULE(TestbenchModule) {
     }
 };
 
+/**
+ * An example for the queue, that we are using for the triggering of the Testmodule that you will implement.
+ */
 SC_MODULE(QUEUE) {
     sc_core::sc_event_queue eq;
     int status = -1;
@@ -62,7 +71,7 @@ SC_MODULE(QUEUE) {
     void trigger(){
         while (true) {
             eq.notify(1, sc_core::SC_SEC);
-            eq.notify(2, sc_core::SC_SEC);
+            eq.notify(100, sc_core::SC_SEC);
             eq.notify(3600, sc_core::SC_SEC);
             eq.notify(3602, sc_core::SC_SEC);
             wait(3602, sc_core::SC_SEC); // another round
@@ -96,12 +105,12 @@ int sc_main(int argc, char* argv[]) {
 
 
 	std::cout << "Simulation started..." << std::endl;
-    sc_core::sc_start(129600000, sc_core::SC_SEC);
+    sc_core::sc_start(1296000, sc_core::SC_SEC);
 	std::cout << "Simulation finished." << std::endl;
     std::cout << "-----------------------------" << std::endl << std::endl;
 
-    std::cout << "Calculated Power: "<<testbench.powerEstimation<<" W"<<std::endl;
-    std::cout << "Calculated Energy: "<<testbench.energyEstimation<<" J"<<std::endl;
+    std::cout << "Calculated Average Power: "<<testbench.powerEstimation<<" W"<<std::endl;
+    std::cout << "Calculated Average Energy: "<<testbench.energyEstimation<<" J"<<std::endl;
 	return 0;
 }
 
