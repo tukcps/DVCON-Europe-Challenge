@@ -36,3 +36,6 @@ make
 1. Implement your strategy for the hackathon.
 2. Send your model to us.
 
+# More Information
+
+Please visit the [guide for participants ](https://dvconchallenge.de/index.php/guide-for-participants/)at our website.
